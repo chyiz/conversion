@@ -79,10 +79,10 @@ void run(conv_seg * array_seg, int id){
 }
 
 int main(){
-    
+    printf("line 1\n\n");
   srand(time(NULL));
   conv_seg * array_segment = conv_checkout_create(ARRAY_SIZE_BYTES, "simple_test", NULL);
-
+  printf("line 2\n\n");
   int i=0;
   int pid=0;
   int pids[NUM_OF_THREADS];
@@ -98,7 +98,7 @@ int main(){
   pthread_barrier_init(barrier, &attr, NUM_OF_THREADS);
   //initializing a mutex
   sem_init(&sem,1,1);
-
+  printf("before for\n\n\n\n\n\n");
   for (;i<NUM_OF_THREADS;++i){
     pid = fork();
     if (pid==0){

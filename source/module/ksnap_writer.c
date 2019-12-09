@@ -52,7 +52,7 @@ struct page * ksnap_get_dirty_ref_page(struct vm_area_struct * vma, unsigned lon
   struct snapshot_pte_list * pte_entry;
 
   if (ksnap_vma_to_userdata(vma)->dirty_pages_list){
-    pte_entry = conv_dirty_search_lookup(vma, index);
+    pte_entry = conv_dirty_search_lookup(ksnap_vma_to_userdata(vma), index);
     if (pte_entry)
       return pte_entry->ref_page;
   }

@@ -117,7 +117,7 @@ struct snapshot_version_list{
 
 struct ksnap{
     struct snapshot_version_list * snapshot_pte_list;	/*TODO: change to list_head if that's what we want this to be....*/
-    struct radix_tree_root snapshot_page_tree; /*used for keeping track of the current page index -> pte, gets used when we get snapshot*/
+    struct radix_tree_root *snapshot_page_tree; /*used for keeping track of the current page index -> pte, gets used when we get snapshot*/
     spinlock_t snapshot_page_tree_lock;
     wait_queue_head_t snapshot_wq;		/*wait queue for blocking get_snapshot requests*/
     atomic_t revision_number;			/*the current revision number*/

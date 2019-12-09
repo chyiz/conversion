@@ -268,7 +268,7 @@ void __cv_update_parallel(struct vm_area_struct * vma, unsigned long flags, uint
 
     //we didn't flush along the way....we need to flush the whole thing
     if (!flush_tlb_per_page){
-      flush_tlb();
+      __flush_tlb();
     }
   }
 #ifdef CONV_LOGGING_ON

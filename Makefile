@@ -31,8 +31,10 @@ conversionmodule :
 	pushd source/module; \
 	sudo ./install.sh y; \
 	popd;
+	echo "Done module"
 
 tests : conversionlib conversionmodule
+	echo "Running tests"
 	pushd tests; \
 	make; \
 	popd; 

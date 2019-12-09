@@ -142,8 +142,8 @@ void conv_cow_user_page(struct page * new_page, struct page * old_page,
     char *vfrom, *vto;
     char tmp[PAGE_SIZE/4];
     
-    vfrom = kmap_atomic(old_page, KM_USER0);
-    vto = kmap_atomic(new_page, KM_USER1);
+    vfrom = kmap_atomic(old_page);//, KM_USER0);
+    vto = kmap_atomic(new_page);//, KM_USER1);
     pte_t * pte = pte_get_entry_from_address(init_mm, vto);
     if (pte){
         //set to WC
@@ -175,8 +175,8 @@ void conv_cow_user_page(struct page * new_page, struct page * old_page,
             //}
     }
 
-    kunmap_atomic(vto, KM_USER1);
-    kunmap_atomic(vfrom, KM_USER0);
+    kunmap_atomic(vto);//, KM_USER1);
+    kunmap_atomic(vfrom);//, KM_USER0);
     
 }    
 
@@ -192,7 +192,7 @@ int init_module(void)
   mmap_snapshot_instance.init_snapshot = NULL;
   mmap_snapshot_instance.do_snapshot_add_pte = cv_page_fault;
   mmap_snapshot_instance.ksnap_userdata_copy = ksnap_userdata_copy;
-  mmap_snapshot_instance.snap_sequence_number=random32()%10000;
+  mmap_snapshot_instance.snap_sequence_number=prandom_u32()%10000;
   mmap_snapshot_instance.conversion_thread_status=conversion_thread_status;
   //mmap_snapshot_instance.conv_cow_user_page=conv_cow_user_page;
   

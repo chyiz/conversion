@@ -69,7 +69,7 @@ int __pte_copy_entry (pte_t * pte, unsigned long pfn, unsigned long index,
 	  //do this only if the old page is actually mapped into our address space
 	  //remove from the rmap
           //printk(KERN_EMERG "UPDATE: dump old page: %p\n", old_page);
-	  page_remove_rmap(old_page);
+	  page_remove_rmap(old_page,false);
           cv_page_debugging_inc_flag(old_page, CV_PAGE_DEBUG_UPDATE_OLDPAGE_PUT);
 	  put_page(old_page);
 	}
@@ -86,14 +86,14 @@ int __pte_copy_entry (pte_t * pte, unsigned long pfn, unsigned long index,
 	get_page(page);	
 	//add the page to the rmap
 	//page_add_anon_rmap(page,vma,readonly_addr);
-	page_add_anon_rmap(page, vma, readonly_addr);
+	page_add_anon_rmap(page, vma, readonly_addr, false);
 	//create the new pte given a physical page (frame)
 	tmp_ro_pte = mk_pte(page, vma->vm_page_prot);
 	//clear the accessed bit
 	pte_mkold(tmp_ro_pte);
 	//flush the tlb for this page
 	if (flush_tlb_entry){
-	  __flush_tlb_one(readonly_addr);
+	  __flush_tlb_one_kernel(readonly_addr);
 	}
 	//now set the new pte
 	set_pte(dest_pte, tmp_ro_pte);
@@ -168,7 +168,7 @@ void do_deferred_pte_entry_update(struct cv_defer_work_entry * entry){
 	  BUG_ON(pte_page(*dest_pte)!=old_page);
 	  //do this only if the old page is actually mapped into our address space
 	  //remove from the rmap
-	  page_remove_rmap(old_page);
+	  page_remove_rmap(old_page,false);
           cv_page_debugging_inc_flag(old_page, CV_PAGE_DEBUG_UPDATE_OLDPAGE_PUT);
 	  put_page(old_page);
 	}
@@ -182,7 +182,7 @@ void do_deferred_pte_entry_update(struct cv_defer_work_entry * entry){
 	  BUG();
 	}
 	//add the page to the rmap
-	page_add_anon_rmap(page, vma, readonly_addr);
+	page_add_anon_rmap(page, vma, readonly_addr, false);
 	//create the new pte given a physical page (frame)
 	tmp_ro_pte = mk_pte(page, vma->vm_page_prot);
 	//clear the accessed bit
@@ -207,5 +207,5 @@ void do_deferred_work(struct vm_area_struct * vma){
         }
         cv_defer_work_entry_free(&cv_user->defer_work, entry);
     }
-    flush_tlb();
+    __flush_tlb();
 }

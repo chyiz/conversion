@@ -196,7 +196,7 @@ void __ksnap_meta_add_dirty_list(struct ksnap_dirty_list_entry * dirty_list, str
 
 void ksnap_meta_clear_dirty(struct vm_area_struct * vma){
   struct ksnap_meta_data_local * meta_data = (struct ksnap_meta_data_local *)(vma->vm_start - (PAGE_SIZE*META_LOCAL_OFFSET_FROM_SEGMENT));
-  if (access_ok(VERIFY_WRITE,meta_data,PAGE_SIZE)){
+  if (access_ok(/*VERIFY_WRITE,*/meta_data,PAGE_SIZE)){
     //printk("ok to write %d, atomic? %d\n", current->pid, in_atomic());
     meta_data->dirty_page_count=0;
     meta_data->dirty_list_mode = DIRTY_LIST_LISTMODE;
@@ -210,7 +210,7 @@ void ksnap_meta_add_dirty_page(struct vm_area_struct * vma, unsigned long cow_pa
   
   //start by computing the address of the meta page
   struct ksnap_meta_data_local * meta_data = (struct ksnap_meta_data_local *)(vma->vm_start - (PAGE_SIZE*META_LOCAL_OFFSET_FROM_SEGMENT));
-  if (access_ok(VERIFY_WRITE, meta_data, PAGE_SIZE)){
+  if (access_ok(/*VERIFY_WRITE, */meta_data, PAGE_SIZE)){
     struct ksnap_dirty_list_entry * dirty_list = (struct ksnap_dirty_list_entry *)(vma->vm_start - (PAGE_SIZE*meta_data->meta_data_size) - (PAGE_SIZE*(META_LOCAL_OFFSET_FROM_SEGMENT-1)));
     if (meta_data->dirty_list_mode == DIRTY_LIST_LISTMODE){
       __ksnap_meta_add_dirty_list(dirty_list, meta_data, cow_page_index);

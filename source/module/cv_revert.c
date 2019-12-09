@@ -30,14 +30,14 @@ void conv_revert(struct vm_area_struct * vma){
         dest_pte = pte_get_entry_from_address(vma->vm_mm, entry->addr);
         BUG_ON(dest_pte==NULL);
         //remove from rmap
-        page_remove_rmap(current_page);
+        page_remove_rmap(current_page,false);
         put_page(current_page);
         //if we don't have a ref page we need to do something different
         if (entry->ref_page || conv_is_checkpointed_entry(entry)){
             restore_page=(conv_is_checkpointed_entry(entry)) ? conv_get_checkpoint_page(entry) : entry->ref_page;
             //add the old page back
             //page_add_anon_rmap(restore_page, vma, PAGE_ALIGN(entry->addr));
-            page_add_file_rmap(restore_page);
+            page_add_file_rmap(restore_page, false);
             //create the new pte based on the old page
             new_pte=mk_pte(restore_page, vma->vm_page_prot);
             //now set the new pte
@@ -64,7 +64,7 @@ void conv_revert(struct vm_area_struct * vma){
     }
     if (revert_counter>0){
         //flush it up!
-        flush_tlb();
+        __flush_tlb();
     }
     cv_user->partial_version_num=0;
     cv_meta_set_partial_version_num(vma, 0);

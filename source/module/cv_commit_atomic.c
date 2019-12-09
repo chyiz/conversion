@@ -64,10 +64,10 @@ static void __update_page_mapping(struct address_space * mapping, struct vm_area
   }
   do{
     //lets now add our new pte into the pte radix tree
-    insert_error = radix_tree_insert(&cv_seg->snapshot_page_tree, page->index, &version_list_entry->list);
+    insert_error = radix_tree_insert(*(&cv_seg->snapshot_page_tree), page->index, &version_list_entry->list);
     //if it wasn't an eexist error, then something is wrong and we have a bug
     if (insert_error == -EEXIST){
-      radix_tree_delete(&cv_seg->snapshot_page_tree, page->index);
+      radix_tree_delete(*(&cv_seg->snapshot_page_tree), page->index);
     }
     else if(insert_error){
       BUG();

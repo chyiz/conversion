@@ -295,7 +295,7 @@ void cv_commit_version_parallel(struct vm_area_struct * vma, int defer_work){
   //ok, its safe to update now
   cv_update_parallel_to_version_no_merge(vma, our_version_number, defer_work);
   if (!defer_work){
-      flush_tlb();
+      __flush_tlb();
   }
   cv_meta_set_dirty_page_count(vma, 0);
   cv_stats_end(cv_seg, cv_user, 0, commit_latency);

@@ -57,6 +57,7 @@ char * __strip_file_name(char * file_name){
 
 
 void * __open_shared_memory_segment(unsigned long size_of_segment, char * file_name, void * desired_address, int * fd, int flags, int create){
+  printf("sprintf");
   void * mem;
   int tmp_fd;
   char file_path[200];
@@ -89,7 +90,7 @@ void * __open_shared_memory_segment(unsigned long size_of_segment, char * file_n
   if (desired_address){
     flags |= MAP_FIXED;
   }
-
+  printf("mmap");
   mem = mmap(desired_address,size_of_segment,PROT_READ|PROT_WRITE,flags,*fd,0);
   if (!mem){
     goto error;
@@ -176,11 +177,17 @@ conv_seg * __conv_open(unsigned long size_of_segment, char * segment_name, void 
   int created;
 
   conv_seg * snap = __create_conv_seg(size_of_segment, segment_name);
+  printf("conv_seg %d\n",desired_address);
+  printf("conv_seg %d\n",&snap->fd);
+  printf("conv_seg %d\n",create);
   snap->segment = __open_shared_memory_segment(snap->size_of_segment, snap->file_name, desired_address, &snap->fd, MAP_PRIVATE, create);
-
+  printf("madvise 1");
   madvise(snap->segment, snap->size_of_segment, MADV_KSNAP_ALWAYS);
+  printf("2");
   madvise(snap->segment, snap->size_of_segment, MADV_KSNAP_TRACK);
+  printf("end");
   __ksnap_open_meta_data_segments(size_of_segment, snap->name, snap, create);
+  printf("return");
   //set default editing unit to one byte
   snap->editing_unit=1;
   return snap;

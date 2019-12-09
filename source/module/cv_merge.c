@@ -39,13 +39,13 @@ void ksnap_merge(struct page * latest_page, uint8_t * local, struct page * ref_p
   int j=0;
 
   if (ref_page!=NULL){
-    ref = kmap_atomic(ref_page, KM_USER1);
+    ref = kmap_atomic(ref_page);//, KM_USER1);
   }
   else{
     ref = cv_merge_empty_page;
   }
 
-  latest = kmap_atomic(latest_page, KM_USER0);
+  latest = kmap_atomic(latest_page);//, KM_USER0);
 
   if (!ref || !latest){
       printk(KSNAP_LOG_LEVEL "failed to map ref %p or latest %p\n", ref, latest);
@@ -95,9 +95,9 @@ void ksnap_merge(struct page * latest_page, uint8_t * local, struct page * ref_p
   }
 
   
-  kunmap_atomic(latest, KM_USER0);
+  kunmap_atomic(latest);//, KM_USER0);
   if (ref_page){
-    kunmap_atomic(ref, KM_USER1);
+    kunmap_atomic(ref);//, KM_USER1);
   }
 
 }

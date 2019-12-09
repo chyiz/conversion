@@ -110,7 +110,7 @@ struct ksnap * ksnap_init_snapshot (struct address_space * mapping, struct vm_ar
   //uncommitted entry
   ksnap_data->uncommitted_version_entry = ksnap_data->snapshot_pte_list->uncommitted_version_entry;
   //now, lets initialize the radix tree for mapping index to pte
-  INIT_RADIX_TREE(&ksnap_data->snapshot_page_tree, GFP_KERNEL);
+  INIT_RADIX_TREE(*(&ksnap_data->snapshot_page_tree), GFP_KERNEL);
   //setup the wait queue used for blocking snapshot requests
   init_waitqueue_head(&ksnap_data->snapshot_wq);
   //initialize the priority list

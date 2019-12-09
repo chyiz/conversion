@@ -104,7 +104,7 @@ struct snapshot_pte_list * cv_version_list_lookup(struct ksnap * cv_seg, uint64_
   
   pte_entry=NULL;
   spin_lock(&cv_seg->snapshot_page_tree_lock);
-  pte_entry_ls=radix_tree_lookup(&cv_seg->snapshot_page_tree, index);
+  pte_entry_ls=radix_tree_lookup(*(&cv_seg->snapshot_page_tree), index);
   spin_unlock(&cv_seg->snapshot_page_tree_lock);
   if (pte_entry_ls){
     pte_entry = list_entry(pte_entry_ls, struct snapshot_pte_list, list);

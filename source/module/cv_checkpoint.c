@@ -49,7 +49,7 @@ void conv_checkpoint(struct vm_area_struct * vma){
         }
     }
     if (checkpointed_counter>0){
-        flush_tlb();
+        __flush_tlb();
     }
     //printk(KERN_EMERG "DONE CHECKPOINTING!!! %d\n", current->pid);
 }
